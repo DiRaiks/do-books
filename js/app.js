@@ -1,11 +1,17 @@
 $(document).ready(function () {
-    let items = [],
+    let items = localStorage.getItem('books') && JSON.parse(localStorage.getItem('books')) || [],
         numItem = 0;
     const inputAuthor = $('.input-author'),
             inputYear = $('.input-year'),
             inputName = $('.input-name'),
             inputPageCount = $('.input-pageCount'),
             content = $('.content');
+
+    if (items.length) {
+        console.log('items', items);
+        showItemOnPages(items);
+    }
+
 
 
     //конструктор объекта книги
@@ -18,6 +24,11 @@ $(document).ready(function () {
             this.id = id;
         }
     };
+
+    function setBooksInLocalStorage(books) {
+        localStorage.setItem('books', JSON.stringify(books))
+    };
+
 
     //добавление по клику
     $('.button-add').on('click', function () {
@@ -36,9 +47,8 @@ $(document).ready(function () {
        // if (!valid) return;
        items.push(new oneBook(book.author,book.year, book.name, book.pageCount, numItem));
        numItem++;
-       console.log(items, numItem);
-       // $('.input-text').val('');
        showItemOnPages(items);
+       setBooksInLocalStorage(items);
        cleaningFields();
    };
 
@@ -64,7 +74,7 @@ $(document).ready(function () {
                     <span>Book name: ${book.name}</span>
                     <span>Pages: ${book.pageCount}</span>
                     <input class="button-edit" type="button" value="Edit">
-                    <input class="remove" type="button" value="Remove">
+                    <input class="button-remove" type="button" value="Remove">
                 </li>`
     };
 
@@ -82,16 +92,20 @@ $(document).ready(function () {
             return item.id == id
         });
         const bookToEdit = items[bookIndex];
+        items.splice(bookIndex, 1);
         setValue(bookToEdit);
+        setBooksInLocalStorage(items);
+        showItemOnPages(items);
     });
 
     //удаление книги
-    content.on('click', '.list-books .book .button-edit', function () {
+    content.on('click', '.list-books .book .button-remove', function () {
         const id = $(this).parent().attr('id');
         const bookIndex = items.findIndex((item) => {
             return item.id == id
         });
         items.splice(bookIndex, 1);
+        setBooksInLocalStorage(items);
         showItemOnPages(items);
     });
 });
