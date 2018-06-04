@@ -4,7 +4,9 @@ $(document).ready(function () {
     const inputAuthor = $('.input-author'),
             inputYear = $('.input-year'),
             inputName = $('.input-name'),
-            inputPageCount = $('.input-pageCount');
+            inputPageCount = $('.input-pageCount'),
+            content = $('.content');
+
 
     //конструктор объекта книги
     class oneBook {
@@ -13,7 +15,7 @@ $(document).ready(function () {
             this.year = year;
             this.name = name;
             this.pageCount = pageCount;
-            this._id = id;
+            this.id = id;
         }
     };
 
@@ -32,11 +34,19 @@ $(document).ready(function () {
    function addBook(book) {
        // let valid = validBook(book);
        // if (!valid) return;
-       items.push(new oneBook(book.author,book.year, book.name, book.pageCount));
+       items.push(new oneBook(book.author,book.year, book.name, book.pageCount, numItem));
        numItem++;
        console.log(items, numItem);
        // $('.input-text').val('');
        showItemOnPages(items);
+       cleaningFields();
+   };
+
+   function cleaningFields() {
+       inputAuthor.val('');
+       inputYear.val('');
+       inputName.val('');
+       inputPageCount.val('');
    };
 
    function showItemOnPages(booksArray) {
@@ -48,11 +58,40 @@ $(document).ready(function () {
     };
 
     function createBookElement(book) {
-        return `<li id=${book.id} class=''>
-                    <span>Author: ${book.author}<span/>
-                    <span>Year: ${book.year}<span/>
-                    <span>Book name: ${book.name}<span/>
-                    <span>Pages: ${book.pageCount}<span/>
+        return `<li id=${book.id} class='book'>
+                    <span>Author: ${book.author}</span>
+                    <span>Year: ${book.year}</span>
+                    <span>Book name: ${book.name}</span>
+                    <span>Pages: ${book.pageCount}</span>
+                    <input class="button-edit" type="button" value="Edit">
+                    <input class="remove" type="button" value="Remove">
                 </li>`
+    };
+
+    function setValue(book) {
+        inputAuthor.val(book.author);
+        inputYear.val(book.year);
+        inputName.val(book.name);
+        inputPageCount.val(book.pageCount);
     }
+
+    //редактирование книги
+    content.on('click', '.list-books .book .button-edit', function () {
+        const id = $(this).parent().attr('id');
+        const bookIndex = items.findIndex((item) => {
+            return item.id == id
+        });
+        const bookToEdit = items[bookIndex];
+        setValue(bookToEdit);
+    });
+
+    //удаление книги
+    content.on('click', '.list-books .book .button-edit', function () {
+        const id = $(this).parent().attr('id');
+        const bookIndex = items.findIndex((item) => {
+            return item.id == id
+        });
+        items.splice(bookIndex, 1);
+        showItemOnPages(items);
+    });
 });
