@@ -79,9 +79,7 @@ $(document).ready(function () {
         return  `<div id=${book.id} class="card book">
                     <div class="card-header">Название: ${book.name}</div>
                     <div class="card-body
-                        <h5 class="card-title">Автор: ${book.author}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Количество страниц: ${book.pageCount}</h6>
-                        <p class="card-text">Год издания: ${book.year}</p>
+                        <p class="card-text">Автор: ${book.author}</p>
                         <a href="#" class="btn btn-primary button-edit">Редактировать</a>
                         <a href="#" class="btn btn-primary button-remove">Удалить</a>
                     </div>
