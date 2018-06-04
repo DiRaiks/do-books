@@ -6,9 +6,11 @@ $(document).ready(function () {
             inputName = $('.input-name'),
             inputPageCount = $('.input-pageCount'),
             content = $('.content');
+    const itemsOnPage = 2;
+    let currentPage;
 
     if (items.length) {
-        showItemOnPages(items);
+        paginationItems(items);
     }
 
     //конструктор объекта книги
@@ -37,6 +39,7 @@ $(document).ready(function () {
         addBook(book);
     });
 
+    //валидация
     function validBook(book) {
         let valid = true;
         if (!book.author || !book.name || !book.year || !book.pageCount) {
@@ -51,37 +54,31 @@ $(document).ready(function () {
        if (!valid) return;
        items.push(new oneBook(book.author,book.year, book.name, book.pageCount, numItem));
        numItem++;
-       showItemOnPages(items);
+       paginationItems(items);
        setBooksInLocalStorage(items);
        cleaningFields();
    };
-
+   //очистка полей
    function cleaningFields() {
        inputAuthor.val('');
        inputYear.val('');
        inputName.val('');
        inputPageCount.val('');
    };
-
-   function showItemOnPages(booksArray) {
-        let bookList = '';
-        for (const book of booksArray) {
-            bookList += createBookElement(book);
-        }
-        $('.list-books').html(bookList);
+   //создание книги
+   function createBookElement(book) {
+        return  `<div id=${book.id} class="card book">
+                    <div class="card-header">Название: ${book.name}</div>
+                    <div class="card-body
+                        <h5 class="card-title">Автор: ${book.author}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Количество страниц: ${book.pageCount}</h6>
+                        <p class="card-text">Год издания: ${book.year}</p>
+                        <a href="#" class="btn btn-primary button-edit">Редактировать</a>
+                        <a href="#" class="btn btn-primary button-remove">Удалить</a>
+                    </div>
+                </div>`
     };
-
-    function createBookElement(book) {
-        return `<li id=${book.id} class='book'>
-                    <span>Author: ${book.author}</span>
-                    <span>Year: ${book.year}</span>
-                    <span>Book name: ${book.name}</span>
-                    <span>Pages: ${book.pageCount}</span>
-                    <input class="button-edit" type="button" value="Edit">
-                    <input class="button-remove" type="button" value="Remove">
-                </li>`
-    };
-
+    //установка данных в поля
     function setValue(book) {
         inputAuthor.val(book.author);
         inputYear.val(book.year);
@@ -91,25 +88,68 @@ $(document).ready(function () {
 
     //редактирование книги
     content.on('click', '.list-books .book .button-edit', function () {
-        const id = $(this).parent().attr('id');
+        const id = $(this).parent().parent().attr('id');
         const bookIndex = items.findIndex((item) => {
             return item.id == id
         });
         const bookToEdit = items[bookIndex];
-        items.splice(bookIndex, 1);
         setValue(bookToEdit);
+        items.splice(bookIndex, 1);
         setBooksInLocalStorage(items);
-        showItemOnPages(items);
+        paginationItems(items);
     });
 
     //удаление книги
     content.on('click', '.list-books .book .button-remove', function () {
-        const id = $(this).parent().attr('id');
+        const id = $(this).parent().parent().attr('id'),
+            clickNum = +$('.pages ul .page a#currentPage').text();
+
         const bookIndex = items.findIndex((item) => {
             return item.id == id
         });
         items.splice(bookIndex, 1);
         setBooksInLocalStorage(items);
-        showItemOnPages(items);
+        paginationItems(items, clickNum);
     });
+
+    //переход по страницам
+    $('.pages').on('click', '.page a', function () {
+        const clickNum = +$(this).text();
+        paginationItems(items, clickNum);
+    });
+
+    //Пагинация
+    function countPages(array) {
+        return Math.ceil(array.length / itemsOnPage)
+    };
+
+    function showItemOnPages(currentPage, booksArray) {
+        let bookList = '';
+        let showItemsBox = booksArray.slice(currentPage * itemsOnPage - itemsOnPage, currentPage * itemsOnPage);
+        for (const book of showItemsBox) {
+            bookList += createBookElement(book);
+        }
+        $('.list-books').html(bookList);
+    };
+
+    function paginationItems(array, numPage) {
+        let allPages = countPages(array);
+        numPage
+            ? (numPage > allPages ? currentPage = allPages : currentPage = numPage)
+            : (currentPage = allPages);
+
+        let paginationString = '<ul class="pagination">';
+        for (let i = 1; i <= allPages; i++) {
+            i == currentPage
+                ? paginationString = `${paginationString}<li class="page page-item">
+                                                            <a href="#" class="page-link" id="currentPage">${i}</a>
+                                                        </li>`
+                :  paginationString = `${paginationString}<li class="page page-item">
+                                                            <a class="page-link" href="#">${i}</a>
+                                                        </li>`;
+        }
+        paginationString = `${paginationString}</ul>`;
+        $('.pages').html(paginationString);
+        showItemOnPages(currentPage, array);
+    };
 });
