@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>DO Books</title>
     <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -14,24 +15,33 @@
 </head>
 <body>
 
-    <div class="app">
-        <label for="author">Author</label>
-        <input id="author" class="input-author" type="text" autofocus placeholder="Your Text">
+    <div class="app container-fluid">
+        <div class="row">
+            <form class="col-sm-4">
+                <div class="form-group">
+                    <label class='col-form-label' for="author">Author</label>
+                    <input id="author" class="input-author form-control" type="text" autofocus placeholder="Your Text">
+                </div>
+                <div class="form-group">
+                    <label class='col-form-label' for="year">Year</label>
+                    <input id="year" class="input-year form-control" type="text" placeholder="Your Text">
+                </div>
+                <div class="form-group">
+                    <label class='col-form-label' for="name">Name</label>
+                    <input id="name" class="input-name form-control" type="text" placeholder="Your Text">
+                </div>
+                <div class="form-group">
+                    <label class='col-form-label' for="pageCount">Page count</label>
+                    <input id="pageCount" class="input-pageCount form-control" type="text" placeholder="Your Text">
+                </div>
+                <input type="button" class="button-add btn btn-primary" value="ADD">
+            </form>
+            <div class="content col-sm-8">
+                <ul class="list-books"></ul>
 
-        <label for="year">Year</label>
-        <input id="year" class="input-year" type="text" placeholder="Your Text">
+                <div class="pages"></div>
+            </div>
 
-        <label for="name">Name</label>
-        <input id="name" class="input-name" type="text" placeholder="Your Text">
-
-        <label for="pageCount">Page count</label>
-        <input id="pageCount" class="input-pageCount" type="text" placeholder="Your Text">
-
-        <a href="#" class="button-add">Add</a>
-        <div class="content">
-            <ul class="list-books"></ul>
-
-            <div class="pages"></div>
         </div>
     </div>
 

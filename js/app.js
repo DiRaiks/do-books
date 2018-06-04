@@ -8,11 +8,8 @@ $(document).ready(function () {
             content = $('.content');
 
     if (items.length) {
-        console.log('items', items);
         showItemOnPages(items);
     }
-
-
 
     //конструктор объекта книги
     class oneBook {
@@ -29,7 +26,6 @@ $(document).ready(function () {
         localStorage.setItem('books', JSON.stringify(books))
     };
 
-
     //добавление по клику
     $('.button-add').on('click', function () {
         const book = {
@@ -41,10 +37,18 @@ $(document).ready(function () {
         addBook(book);
     });
 
+    function validBook(book) {
+        let valid = true;
+        if (!book.author || !book.name || !book.year || !book.pageCount) {
+            valid = false;
+        }
+        return valid;
+    }
+
     //функция добавления элемента на страницу и в массив
    function addBook(book) {
-       // let valid = validBook(book);
-       // if (!valid) return;
+       const valid = validBook(book);
+       if (!valid) return;
        items.push(new oneBook(book.author,book.year, book.name, book.pageCount, numItem));
        numItem++;
        showItemOnPages(items);
