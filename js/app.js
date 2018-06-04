@@ -46,7 +46,7 @@ $(document).ready(function () {
             valid = false;
             if (!$('*').is('.alert')) {
                 $('.app').prepend(`<div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong>Опа!</strong> Необходимо заполнить все поля!
+                                        <strong>Упс!</strong> Необходимо заполнить все поля!
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
