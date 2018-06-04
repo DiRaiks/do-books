@@ -31,18 +31,22 @@ $(document).ready(function () {
     //добавление по клику
     $('.button-add').on('click', function () {
         const book = {
-            author: inputAuthor.val(),
-            name: inputName.val(),
-            year: inputYear.val(),
-            pageCount: inputPageCount.val()
+            author: inputAuthor.val().trim(),
+            name: inputName.val().trim(),
+            year: inputYear.val().trim(),
+            pageCount: inputPageCount.val().trim()
         }
         addBook(book);
     });
 
     //валидация
-    function validBook() {
+    function validBook(book) {
+        var SCRIPT_REGEX = /(\<script)\s*[^\>]*\>([^\<]*\<\/script>)?/gi;
         let valid = true;
-        if (!inputAuthor.val() || !inputName.val() || !inputYear.val() || !inputPageCount.val()) {
+        if (!book.author || SCRIPT_REGEX.test(book.author)
+            || !book.name || SCRIPT_REGEX.test(book.name)
+            || !book.year || SCRIPT_REGEX.test(book.year)
+            || !book.pageCount || SCRIPT_REGEX.test(book.pageCount)) {
             valid = false;
             if (!$('*').is('.alert')) {
                 $('.app').prepend(`<div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -58,7 +62,7 @@ $(document).ready(function () {
 
     //функция добавления элемента на страницу и в массив
    function addBook(book) {
-       const valid = validBook();
+       const valid = validBook(book);
        if (!valid) return;
        $('.error').hide();
        items.push(new oneBook(book.author,book.year, book.name, book.pageCount, numItem));
