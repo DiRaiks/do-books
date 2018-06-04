@@ -40,18 +40,27 @@ $(document).ready(function () {
     });
 
     //валидация
-    function validBook(book) {
+    function validBook() {
         let valid = true;
-        if (!book.author || !book.name || !book.year || !book.pageCount) {
+        if (!inputAuthor.val() || !inputName.val() || !inputYear.val() || !inputPageCount.val()) {
             valid = false;
+            if (!$('*').is('.alert')) {
+                $('.app').prepend(`<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Опа!</strong> Необходимо заполнить все поля!
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>`);
+            }
         }
         return valid;
     }
 
     //функция добавления элемента на страницу и в массив
    function addBook(book) {
-       const valid = validBook(book);
+       const valid = validBook();
        if (!valid) return;
+       $('.error').hide();
        items.push(new oneBook(book.author,book.year, book.name, book.pageCount, numItem));
        numItem++;
        paginationItems(items);
